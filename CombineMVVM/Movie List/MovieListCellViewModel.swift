@@ -29,12 +29,11 @@ final class MovieListCellViewModel {
 
         /* Test realtime value changes. It's fun.
          Timer.scheduledTimer(withTimeInterval: [1, 2, 3, 4].randomElement()!, repeats: true) { _ in
-            self.title = self.movie.title + " " + "\(Date().description)".components(separatedBy: ":").last!
+         self.title = self.movie.title + " " + "\(Date().description)".components(separatedBy: ":").last!
          } */
     }
 
     func loadPosterImage() -> AnyPublisher<UIImage?, Never>? {
-
         if let urlString = self.movie.posterPath {
 
             let fullPath = "https://image.tmdb.org/t/p/w185/"+urlString

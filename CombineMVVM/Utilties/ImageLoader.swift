@@ -12,8 +12,7 @@ protocol ImageProvider {
     func loadPosterImage(urlString: String) -> AnyPublisher<UIImage?, Never>?
 }
 
-class ImageLoader: ImageProvider {
-
+final class ImageLoader: ImageProvider {
     func loadPosterImage(urlString: String) -> AnyPublisher<UIImage?, Never>? {
 
         if let url = URL(string: urlString) {

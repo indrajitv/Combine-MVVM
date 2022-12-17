@@ -15,7 +15,7 @@ final class MovieListCell: UITableViewCell {
     private var viewModel: MovieListCellViewModel?
     private var subscriptions = Set<AnyCancellable>()
 
-    private let posterImageView: UIImageView = {
+    let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.masksToBounds = true
@@ -24,7 +24,7 @@ final class MovieListCell: UITableViewCell {
         return imageView
     }()
 
-    private let titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .body, compatibleWith: .current)
@@ -32,7 +32,7 @@ final class MovieListCell: UITableViewCell {
         return label
     }()
 
-    private let descriptionLabel: UILabel = {
+    let descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 2

@@ -11,7 +11,7 @@ protocol MovieProvider {
     func getMovieList() -> Future<[Movie], CustomError>
 }
 
-class ServerMovieFetcher: MovieProvider {
+final class ServerMovieFetcher: MovieProvider {
 
     private let apiProvider: APIProvider
     private var subscriptions = Set<AnyCancellable>()
@@ -23,7 +23,6 @@ class ServerMovieFetcher: MovieProvider {
     func getMovieList() -> Future<[Movie], CustomError> {
 
         return .init { [unowned self] result in
-            
             self.apiProvider.execute(apiRequest: .init(path: "/movie/top_rated", type: .get), value: Page.self, queue: .main)
                 .sink { complete in
                     if case .failure(let error) = complete {

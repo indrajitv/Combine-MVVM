@@ -8,7 +8,6 @@
 import Foundation
 
 extension URL {
-
     func url(with queryItems: [URLQueryItem]) -> URL {
         var components = URLComponents(url: self, resolvingAgainstBaseURL: true)!
         components.queryItems = (components.queryItems ?? []) + queryItems

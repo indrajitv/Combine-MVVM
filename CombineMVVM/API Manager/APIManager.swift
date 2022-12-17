@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class APIManager: APIProvider {
+final class APIManager: APIProvider {
 
     let hostPath: String = "https://api.themoviedb.org/3"
     let apiKey = "e4f9e61f6ffd66639d33d3dde7e3159b"

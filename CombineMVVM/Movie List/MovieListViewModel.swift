@@ -19,7 +19,7 @@ final class MovieListViewModel {
     @Published
     private(set) var movieListCellViewModels: [MovieListCellViewModel] = []
 
-    private var reservedMovieListCellViewModels: [MovieListCellViewModel]?
+    private(set) var reservedMovieListCellViewModels: [MovieListCellViewModel]?
 
     let searchBarPlaceholder: String = "Search"
 
@@ -62,16 +62,15 @@ final class MovieListViewModel {
         return self.movieListCellViewModels
     }
 
-    func deleteMovieAt(at index : Int) -> MovieListCellViewModel {
-        if var reserved = self.reservedMovieListCellViewModels, reserved.count > index {
-            reserved.remove(at: index)
+    func deleteMovieAt(at index : Int) throws -> MovieListCellViewModel {
+        if let reserved = self.reservedMovieListCellViewModels, reserved.count > index {
+            self.reservedMovieListCellViewModels?.remove(at: index)
         }
 
-        var item: MovieListCellViewModel!
         if self.movieListCellViewModels.count > index {
-            item = self.movieListCellViewModels.remove(at: index)
+            return self.movieListCellViewModels.remove(at: index)
+        } else {
+            throw CustomError.custom(description: "Index out of bound.")
         }
-        
-        return item
     }
 }

@@ -13,7 +13,7 @@ final class MovieListController: UIViewController {
     private let viewModel: MovieListViewModel
     private var subscriptions = Set<AnyCancellable>()
 
-    private lazy var tableView: UITableView = {
+    private(set) lazy var tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(MovieListCell.self, forCellReuseIdentifier: MovieListCell.cellID)
@@ -33,7 +33,7 @@ final class MovieListController: UIViewController {
         return tableDatasource
     }()
 
-    private lazy var searchBar: UISearchBar = {
+    private(set) lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.placeholder = self.viewModel.searchBarPlaceholder
@@ -50,6 +50,7 @@ final class MovieListController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         self.setUpViews()
         self.loadMovies()
 
@@ -86,12 +87,9 @@ final class MovieListController: UIViewController {
     }
 
     private func loadDatasource(movies: [MovieListCellViewModel]) {
-        var snap = self.tableDatasource.snapshot()
+        var snap = NSDiffableDataSourceSnapshot<AnyHashable, MovieListCellViewModel>()
 
-        if snap.numberOfSections == 0 {
-            snap.appendSections([.init("")])
-        }
-
+        snap.appendSections([.init("")])
         snap.appendItems(movies)
         self.tableDatasource.apply(snap, animatingDifferences: true)
     }
@@ -100,12 +98,6 @@ final class MovieListController: UIViewController {
         var snap = self.tableDatasource.snapshot()
         snap.deleteItems([movie])
         self.tableDatasource.apply(snap, animatingDifferences: true)
-    }
-
-    private func deleteAllItemsFromDatasource() {
-        var snap = self.tableDatasource.snapshot()
-        snap.deleteAllItems()
-        self.tableDatasource.apply(snap)
     }
 
     private func subscribePublishers() {
@@ -125,7 +117,6 @@ final class MovieListController: UIViewController {
         .debounce(for: 0.2, scheduler: DispatchQueue.main) // This will stop calling API on each typing.
         .compactMap({ ($0.object as? UISearchTextField)?.text }) // We are only interested in text.
         .sink { [weak self] text in
-            self?.deleteAllItemsFromDatasource()
             self?.viewModel.filterCurrentMovies(with: text)
         }
         .store(in: &self.subscriptions)
@@ -139,7 +130,7 @@ extension MovieListController: UITableViewDelegate {
         return .init(actions: [.init(style: .destructive,
                                      title: self.viewModel.tableSwipeDeleteActionText,
                                      handler: { [weak self] _, _, completion in
-            if let item = self?.viewModel.deleteMovieAt(at: indexPath.row) {
+            if let item = try? self?.viewModel.deleteMovieAt(at: indexPath.row) {
                 self?.deleteDatasource(item: item)
             }
             completion(true)
